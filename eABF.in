@@ -1,0 +1,82 @@
+colvarsTrajFrequency            1000
+colvarsRestartFrequency         5000
+
+colvar {
+    extendedlagrangian      on
+    extendedFluctuation     2
+    extendedTimeConstant    200
+    extendedLangevinDamping 1.0
+    subtractAppliedForce    on
+#     expandBoundaries        on
+
+    name dihedral_A
+    
+    lowerboundary -180.0
+    upperboundary 180.0
+    width 2.0
+    
+    dihedral {
+	
+    group1 {
+             atomNumbers { 5 }
+        }
+    group2 {
+             atomNumbers { 7 }
+        }
+    group3 {
+             atomNumbers { 9 }
+        }
+    group4 {
+             atomNumbers { 15 }
+        }
+    }
+}
+
+colvar {
+    extendedlagrangian      on
+    extendedFluctuation     2
+    extendedTimeConstant    200
+    extendedLangevinDamping 1.0
+    subtractAppliedForce    on
+#     expandBoundaries        on
+
+    name dihedral_B
+    
+    lowerboundary -180.0
+    upperboundary 180.0
+    width 2.0
+
+    dihedral {
+    group1 {
+             atomNumbers { 17 }
+        }
+    group2 {
+             atomNumbers { 15 }
+        }
+    group3 {
+             atomNumbers { 9 }
+        }
+    group4 {
+             atomNumbers { 7 }
+        }
+    }
+}
+
+abf {
+    fullSamples 500
+    outputFreq  50000
+    historyFreq 500000
+    colvars     dihedral_A dihedral_B
+}
+
+metadynamics {
+    colvars                 dihedral_A dihedral_B
+    hillWidth               5.0
+    hillWeight              0.1
+    newHillFrequency        1000
+    rebinGrids              on
+    wellTempered            on
+    biasTemperature         3000
+    writeHillsTrajectory    on
+    keepFreeEnergyFiles     off
+}

@@ -1,0 +1,89 @@
+# alanine dipeptide
+
+# Variables
+set inputName           output_namd/alad_eABF
+set outName             output_namd/alad_eABF+1
+set temperature         300
+
+# Use amber ff
+parmfile                alad.parm7
+coordinates             $inputName.coor
+# ambercoor               alad_2.rst7
+velocities              $inputName.vel
+extendedSystem          $inputName.xsc
+# temperature             $temperature
+
+## SIMULATION PARAMETERS                                  
+# AMBER FF settings
+amber                   on
+rigidBonds              all
+useSettle               on
+rigidTolerance          1.0e-8
+rigidIterations         100
+cutoff                  9.0
+pairlistdist            11.0
+switching               off
+exclude                 scaled1-4
+readexclusions          yes
+1-4scaling              0.83333333
+scnb                    2.0
+zeromomentum            on
+ljcorrection            on
+watermodel              tip3
+
+mergeCrossterms     no
+
+# Integrator Parameters 
+timestep                1.0 
+nonbondedFreq           1 
+fullElectFrequency      2 
+stepspercycle           10
+splitpatch              hydrogen
+hgroupcutoff            2.8
+
+# Output
+outputenergies          5000
+outputtiming            50000
+restartfreq             50000
+binaryoutput            no
+binaryrestart           no
+outputname              $outName
+restartname             $outName.restart
+DCDfile                 $outName.dcd
+DCDfreq                 50000
+DCDUnitCell             yes
+
+# CONSTANT-T
+
+langevin                on
+langevinTemp            300.0
+langevinDamping         10.0
+
+# Constant pressure
+#langevinPiston          on
+#langevinPistonTarget    1.01325
+#langevinPistonPeriod    200.0
+#langevinPistonDecay     100.0
+#langevinPistonTemp      $temperature
+#useGroupPressure        yes
+wrapWater               on
+
+# Box information
+# cellBasisVector1        48.07087832689285 0 0
+# cellBasisVector2        0 50.65664976835251 0
+# cellBasisVector3        0 0 46.355744779109955
+# cellOrigin              23.581504821777344 24.55516242980957 22.67096519470215
+
+
+# COM
+
+commotion               no
+
+colvars                 on
+colvarsConfig           eABF.in
+colvarsInput            $inputName.restart.colvars.state
+
+# numSteps              600000000
+# minimize              10000
+firsttimestep           300000000
+run                     300000000

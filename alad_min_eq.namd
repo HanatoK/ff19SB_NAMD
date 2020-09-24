@@ -1,0 +1,85 @@
+# alanine dipeptide
+
+# Variables
+set outName	    output_namd/alad_min_eq
+set temperature 300.0
+
+# Use amber ff
+parmfile            alad.parm7
+# coordinates         alad.pdb
+ambercoor           alad_2.rst7
+temperature         $temperature
+
+## SIMULATION PARAMETERS                                  
+# AMBER FF settings
+amber               on
+oldParmReader       no
+rigidBonds          all
+useSettle           on
+rigidTolerance      1.0e-8
+rigidIterations     100
+cutoff              9.0
+pairlistdist        11.0
+switching           off
+exclude             scaled1-4
+readexclusions      yes
+1-4scaling          0.83333333
+scnb                2.0
+zeromomentum        on
+ljcorrection        off
+watermodel          tip3
+
+mergeCrossterms     no
+
+# Integrator Parameters 
+timestep            1.0 
+nonbondedFreq       1 
+fullElectFrequency  2 
+stepspercycle       20
+splitpatch          hydrogen
+hgroupcutoff        2.8
+
+# Output
+outputenergies          100
+outputtiming            5000
+restartfreq             5000
+binaryoutput            no
+binaryrestart           no
+outputname              $outName
+restartname             $outName.restart
+DCDfile                 $outName.dcd
+DCDfreq                 100
+DCDUnitCell             yes
+
+# Box information
+cellBasisVector1        48.07087832689285 0 0
+cellBasisVector2        0 50.65664976835251 0
+cellBasisVector3        0 0 46.355744779109955
+cellOrigin              23.581504821777344 24.55516242980957 22.67096519470215
+
+# CONSTANT-T
+
+langevin                on
+langevinTemp            $temperature
+langevinDamping         10.0
+
+langevinPiston          on 
+langevinPistonTarget    1.01325
+langevinPistonPeriod    200.0
+langevinPistonDecay     100.0
+langevinPistonTemp      $temperature
+useGroupPressure        yes
+useFlexibleCell         no
+useConstantArea         no
+useConstantRatio        no
+
+# COM
+
+commotion               no
+
+#colvars                 on
+#cv configfile           eABF.in
+
+# numSteps                600000000
+minimize 5000
+run 500000
